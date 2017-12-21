@@ -1,8 +1,12 @@
 package valhalla;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
-
+import static valhalla.Constants.*;
 public class Main {
+
+    private ArrayList<Command> commands = new ArrayList<>();
 
     public static void main(String args[]) {
         Room roomOne = initRooms();
@@ -10,8 +14,8 @@ public class Main {
         Player player = new Player(roomOne);
         System.out.println(player.getCurrentRoom().printRoom());
         while (true) {
-            String s = scan.next();
-            String response = player.doAction(s);
+            String rawCommand = scan.next();
+            String response = player.doAction(rawCommand);
             System.out.println(response);
         }
     }
@@ -25,6 +29,19 @@ public class Main {
         roomOne.getAdjacentRooms().put(Direction.n, roomThree);
         roomThree.getAdjacentRooms().put(Direction.s, roomOne);
         return roomOne;
+    }
+
+    public static void initCommands() {
+
+
+//        look(LOOK),
+//                get(GET),
+//                take(GET),
+//                use(USE),
+//                put(PUT),
+//                give(PUT),
+//                move(MOVE),
+//                go(MOVE);
     }
 
 
