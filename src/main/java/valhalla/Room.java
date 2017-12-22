@@ -1,6 +1,7 @@
 package valhalla;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 @Data
+@NoArgsConstructor
 public class Room {
     private final String INVALID_MOVE = "You can't go that way.";
     private String title;
@@ -27,6 +29,14 @@ public class Room {
         return result;
     }
 
+    public void addItem(Item item) {
+        this.getItems().add(item);
+    }
+
+    public void removeItem(Item item) {
+        this.getItems().remove(item);
+    }
+
     public boolean hasItem(String itemName) {
         return items.stream().anyMatch(item -> item.getName().equalsIgnoreCase(itemName));
     }
@@ -44,7 +54,7 @@ public class Room {
     }
 
     public String printRoom() {
-        return this.title + '\n' + this.description + '\n' + possibleDirections();
+        return this.getTitle() + '\n' + this.getDescription() + '\n' + possibleDirections();
     }
 
     public String invalidMove() {

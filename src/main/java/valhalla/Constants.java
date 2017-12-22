@@ -3,34 +3,32 @@ package valhalla;
 public class Constants {
     public static final Command look = new Command("look", false);
     public static final Command get = new Command("get", true);
-    public static final Command take = new Command("take", true, get);
-    public static final Command move = new Command("move", true);
-    public static final Command go = new Command("go", true, move);
     public static final Command use = new Command("use", true);
+    public static final Command take = new Command("take", true, get);
     public static final Command give = new Command("give", true, use);
     public static final Command put = new Command("put", true, use);
 
     // valid movements
-    public static final Command east = new Command("east", false);
-    public static final Command west = new Command("west", false);
-    public static final Command south = new Command("south", false);
-    public static final Command north = new Command("north", false);
-    public static final Command up = new Command("up", false);
-    public static final Command down = new Command("down", false);
-    public static final Command southeast = new Command("southeast", false);
-    public static final Command southwest = new Command("southwest", false);
-    public static final Command northeast = new Command("northeast", false);
-    public static final Command northwest = new Command("northwest", false);
-    public static final Command e = new Command("e", false, east);
-    public static final Command w = new Command("w", false, west);
-    public static final Command s = new Command("s", false, south);
-    public static final Command n = new Command("n", false, north);
-    public static final Command u = new Command("u", false, up);
-    public static final Command d = new Command("d", false, down);
-    public static final Command se = new Command("se", false, southeast);
-    public static final Command sw = new Command("sw", false, southwest);
-    public static final Command ne = new Command("ne", false, northeast);
-    public static final Command nw = new Command("nw", false, northwest);
+    public static final Movement east = new Movement("east", false, Direction.e);
+    public static final Movement west = new Movement("west", false, Direction.w);
+    public static final Movement south = new Movement("south", false, Direction.s);
+    public static final Movement north = new Movement("north", false, Direction.n);
+    public static final Movement up = new Movement("up", false, Direction.u);
+    public static final Movement down = new Movement("down", false, Direction.d);
+    public static final Movement southeast = new Movement("southeast", false, Direction.se);
+    public static final Movement southwest = new Movement("southwest", false, Direction.sw);
+    public static final Movement northeast = new Movement("northeast", false, Direction.ne);
+    public static final Movement northwest = new Movement("northwest", false, Direction.nw);
+    public static final Movement e = new Movement("e", false, east);
+    public static final Movement w = new Movement("w", false, west);
+    public static final Movement s = new Movement("s", false, south);
+    public static final Movement n = new Movement("n", false, north);
+    public static final Movement u = new Movement("u", false, up);
+    public static final Movement d = new Movement("d", false, down);
+    public static final Movement se = new Movement("se", false, southeast);
+    public static final Movement sw = new Movement("sw", false, southwest);
+    public static final Movement ne = new Movement("ne", false, northeast);
+    public static final Movement nw = new Movement("nw", false, northwest);
 
     public static final Item key = new Item("key");
 

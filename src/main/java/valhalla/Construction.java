@@ -13,6 +13,7 @@ public class Construction {
     private Preposition preposition;
     private Item item1;
     private Item item2;
+    private int type;
 
     public Construction(Command command) {
         this.command = command;
@@ -36,4 +37,10 @@ public class Construction {
         this.item2 = item2;
     }
 
+    public String run() {
+        if (this.getItem1() == null) {
+            return command.getDefaultText();
+        }
+        return item1.doAction(command);
+    }
 }

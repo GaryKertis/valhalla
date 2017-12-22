@@ -8,8 +8,6 @@ public enum CommandList {
     LOOK(look),
     GET(get),
     TAKE(take),
-    MOVE(move),
-    GO(go),
     USE(use),
     GIVE(give),
     PUT(put),

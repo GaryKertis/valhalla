@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static valhalla.Constants.*;
 
@@ -19,6 +20,7 @@ public class CommandParser {
         Construction result = new Construction();
 
         ArrayList<String> split = new ArrayList<>(Arrays.asList(command.trim().split(" ")));
+        split = stripUnnecessaryWords(split);
         Iterator<String> iterator = split.iterator();
 
         // the first word must always be a verb
@@ -28,7 +30,7 @@ public class CommandParser {
                 .findFirst()
                 .orElseThrow(() -> new BadCommandException("Invalid verb."))
                 .getCommand();
-
+        verb = verb.getOptionalAliasFor().orElse(verb);
         result.setCommand(verb);
 
         if (!iterator.hasNext()) {
@@ -89,11 +91,9 @@ public class CommandParser {
 
     public Item getItem(String item) throws BadCommandException {
         try {
-            System.out.println("getting item " + item);
             return player.getItem(item);
         } catch (IllegalArgumentException e) {
-            System.out.println("throwing error " + item);
-            throw new BadCommandException("Player cannot access any item by name " + item);
+            throw new BadCommandException("You don't see any " + item);
         }
     }
 
@@ -103,11 +103,11 @@ public class CommandParser {
                 .findFirst();
     }
 
-    public String[] stripUnnecessaryWords(String[] str) {
-        return Arrays.asList(str).stream()
+    public ArrayList<String> stripUnnecessaryWords(ArrayList<String> str) {
+        return str.stream()
                 .filter(word -> !Articles.has(word))
                 .filter(word -> !Adjectives.has(word))
-                .toArray(String[]::new);
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

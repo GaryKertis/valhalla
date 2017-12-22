@@ -1,8 +1,12 @@
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import valhalla.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
@@ -24,7 +28,7 @@ public class CommandParserTest {
 
     @Test(expected = BadCommandException.class)
     public void noObject() throws BadCommandException {
-        parser.parseCommand("move");
+        parser.parseCommand("give");
     }
 
     @Test
@@ -54,15 +58,16 @@ public class CommandParserTest {
 
     @Test
     public void validConstruction() throws BadCommandException {
-        Construction test = parser.parseCommand("move key");
-        Construction expected = new Construction(CommandList.MOVE.getCommand(), mockedKey);
+        Construction test = parser.parseCommand("take key");
+        Construction expected = new Construction(CommandList.GET.getCommand(), mockedKey);
         assertEquals(test, expected);
     }
 
     @Test
     public void validConstruction2() throws BadCommandException {
-        Construction test = parser.parseCommand("move key under window");
-        Construction expected = new Construction(CommandList.MOVE.getCommand(), mockedKey, Preposition.UNDER, mockedWindow);
+        Construction test = parser.parseCommand("take key under window");
+        Construction expected = new Construction(CommandList.GET.getCommand(), mockedKey, Preposition.UNDER,
+                mockedWindow);
         assertEquals(test, expected);
     }
 
@@ -75,37 +80,37 @@ public class CommandParserTest {
 
     @Test(expected = BadCommandException.class)
     public void itemNotFound() throws BadCommandException {
-        parser.parseCommand("move door");
+        parser.parseCommand("take door");
     }
 
     @Test(expected = BadCommandException.class)
     public void danglingPrepositionWithUnfoundObject() throws BadCommandException {
-        parser.parseCommand("move door under");
+        parser.parseCommand("take door under");
     }
 
     @Test(expected = BadCommandException.class)
     public void danglingPrepositionWithFoundObject() throws BadCommandException {
-        parser.parseCommand("move key under");
+        parser.parseCommand("take key under");
     }
 
     @Test(expected = BadCommandException.class)
     public void secondItemNotFound() throws BadCommandException {
-        parser.parseCommand("move key under door");
+        parser.parseCommand("take key under door");
     }
 
     @Test(expected = BadCommandException.class)
     public void twoItems() throws BadCommandException {
-        parser.parseCommand("move key door");
+        parser.parseCommand("take key door");
     }
 
     @Test(expected = BadCommandException.class)
     public void twoVerbs() throws BadCommandException {
-        parser.parseCommand("move key move");
+        parser.parseCommand("take key take");
     }
 
     @Test()
     public void validShortConstruction() throws BadCommandException {
-        parser.parseCommand("move key");
+        parser.parseCommand("take key");
     }
 
     @Test(expected = BadCommandException.class)
@@ -131,18 +136,19 @@ public class CommandParserTest {
 
     }
 
-    @Test public void stripUnnecessaryWordsTestRemoveArticle() {
-        String[] test = {"abba", "dabba", "the"};
-        String[] expected = {"abba", "dabba"};
-        String[] result = parser.stripUnnecessaryWords(test);
-        assertArrayEquals(expected, result);
+    @Test
+    public void stripUnnecessaryWordsTestRemoveArticle() {
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("abba", "dabba"));
+        ArrayList<String> result = parser.stripUnnecessaryWords(new ArrayList<>(Arrays.asList("abba", "dabba", "the")));
+        assert (expected.equals(result));
     }
 
-    @Test public void stripUnnecessaryWordsTestRemoveAdjective() {
-        String[] test = {"abba", "strange", "knee"};
-        String[] expected = {"abba", "knee"};
-        String[] result = parser.stripUnnecessaryWords(test);
-        assertArrayEquals(expected, result);
+    @Test
+    public void stripUnnecessaryWordsTestRemoveAdjective() {
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("abba", "knee"));
+        ArrayList<String> result = parser.stripUnnecessaryWords(new ArrayList<>(Arrays.asList("abba", "strange",
+                "knee")));
+        assert (expected.equals(result));
     }
 
 }

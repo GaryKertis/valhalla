@@ -1,7 +1,8 @@
 package valhalla;
 
 public enum Adjectives {
-    strange;
+    strange,
+    coffee;
 
     public static boolean has(String name) {
         try {

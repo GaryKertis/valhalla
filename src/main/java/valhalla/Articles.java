@@ -4,7 +4,9 @@ public enum Articles {
     the,
     a,
     an,
-    some;
+    some,
+    go,
+    move;
 
     public static boolean has(String name) {
         try {
