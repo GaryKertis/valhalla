@@ -1,6 +1,8 @@
 package valhalla;
 
 import lombok.Data;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ public class Room {
     private String title;
     private String description;
     private boolean visited = false;
+    private ArrayList<Item> items = new ArrayList<>();
     private HashMap<Direction, Room> adjacentRooms = new HashMap<Direction, Room>();
 
     private String possibleDirections() {
@@ -21,6 +24,10 @@ public class Room {
             if (iterator.hasNext()) result += ",";
         }
         return result;
+    }
+
+    public boolean hasItem(String name) {
+        return items.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
     }
 
     public Room(String title, String description) {

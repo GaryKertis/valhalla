@@ -3,6 +3,7 @@ package valhalla;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Data
 public class Player {
@@ -16,6 +17,14 @@ public class Player {
 
     public void getItem(Item item) {
         inventory.add(item);
+    }
+
+    public boolean hasItem(String name) {
+        return inventory.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
+    }
+
+    public boolean canFindItem(String name) {
+        return hasItem(name) || currentRoom.hasItem(name);
     }
 
     public String doAction(String s) {
