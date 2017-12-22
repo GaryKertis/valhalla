@@ -1,5 +1,12 @@
 package valhalla;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Construction {
 
     private Command command;
@@ -7,17 +14,22 @@ public class Construction {
     private Item item1;
     private Item item2;
 
-    Construction(Command command) {
+    public Construction(Command command) {
         this.command = command;
     }
 
-    Construction(Command command, Preposition preposition, Item item) {
+    public Construction(Command command, Item item) {
+        this.command = command;
+        this.item1 = item;
+    }
+
+    public Construction(Command command, Preposition preposition, Item item) {
         this.command = command;
         this.preposition = preposition;
         this.item1 = item;
     }
 
-    Construction(Command command, Item item1, Preposition preposition, Item item2) {
+    public Construction(Command command, Item item1, Preposition preposition, Item item2) {
         this.command = command;
         this.preposition = preposition;
         this.item1 = item1;

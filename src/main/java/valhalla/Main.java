@@ -12,9 +12,15 @@ public class Main {
         Room roomOne = initRooms();
         Scanner scan = new Scanner(System.in);
         Player player = new Player(roomOne);
+        CommandParser parser = new CommandParser(player);
         System.out.println(player.getCurrentRoom().printRoom());
         while (true) {
-            String rawCommand = scan.next();
+            String rawCommand = scan.nextLine();
+            try {
+                Construction construction = parser.parseCommand(rawCommand);
+            } catch (BadCommandException e) {
+                System.out.println(e.getMessage());
+            }
             String response = player.doAction(rawCommand);
             System.out.println(response);
         }
@@ -28,6 +34,8 @@ public class Main {
         roomOne.getAdjacentRooms().put(Direction.e, roomTwo);
         roomOne.getAdjacentRooms().put(Direction.n, roomThree);
         roomThree.getAdjacentRooms().put(Direction.s, roomOne);
+        roomOne.getItems().add(new Item("key"));
+        roomOne.getItems().add(new Item("window"));
         return roomOne;
     }
 

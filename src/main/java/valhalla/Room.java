@@ -16,7 +16,8 @@ public class Room {
     private ArrayList<Item> items = new ArrayList<>();
     private HashMap<Direction, Room> adjacentRooms = new HashMap<Direction, Room>();
 
-    private String possibleDirections() {
+
+    public String possibleDirections() {
         String result = "Possible directions: ";
         Iterator<Direction> iterator = adjacentRooms.keySet().iterator();
         while (iterator.hasNext()) {
@@ -26,8 +27,15 @@ public class Room {
         return result;
     }
 
-    public boolean hasItem(String name) {
-        return items.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
+    public boolean hasItem(String itemName) {
+        return items.stream().anyMatch(item -> item.getName().equalsIgnoreCase(itemName));
+    }
+
+    public Item getItem(String itemName) {
+        return items.stream()
+                .filter(item -> item.getName().equalsIgnoreCase(itemName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     public Room(String title, String description) {

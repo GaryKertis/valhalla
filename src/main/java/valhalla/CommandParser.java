@@ -1,20 +1,25 @@
 package valhalla;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.swing.text.html.Option;
 import java.util.*;
 
 import static valhalla.Constants.*;
 
+@Data
+@AllArgsConstructor
 public class CommandParser {
 
-    public HashMap<Command, Optional<Item>> parseCommand(String command, Player player) throws BadCommandException {
+    Player player;
 
-        HashMap<Command, Optional<Item>> result = new HashMap<>();
+    public Construction parseCommand(String command) throws BadCommandException {
+
+        Construction result = new Construction();
 
         ArrayList<String> split = new ArrayList<>(Arrays.asList(command.trim().split(" ")));
         Iterator<String> iterator = split.iterator();
-
-        //TODO:remove articles!
 
         // the first word must always be a verb
         String rawVerb = iterator.next();
@@ -24,11 +29,12 @@ public class CommandParser {
                 .orElseThrow(() -> new BadCommandException("Invalid verb."))
                 .getCommand();
 
+        result.setCommand(verb);
+
         if (!iterator.hasNext()) {
             if (verb.isTransitive()) {
                 throw new BadCommandException("Expected object was not found.");
             }
-            result.put(verb, null);
             return result;
         }
 
@@ -40,41 +46,68 @@ public class CommandParser {
             if (!iterator.hasNext()) {
                 throw new BadCommandException("Preposition without object");
             }
-
             //next word MUST be an object that the player can currently find.
-            String rawItem = iterator.next();
-            if (!player.canFindItem(rawItem)) {
-                throw new BadCommandException("Can't find that item");
+            Item item = getItem(iterator.next());
+            result.setItem1(item);
+
+            //no more words allowed
+            if (iterator.hasNext()) {
+                throw new BadCommandException("Words exist beyond expected end of command");
             }
+
             return result;
+        } else {
+            //next word MUST be an object that the player can currently find.
+            Item item = getItem(rawItemOrPreposition);
+            result.setItem1(item);
         }
-
-        //the next word must be an object that the player can find, since the previous word was not a preposition.
-        if (!player.canFindItem(rawItemOrPreposition)) {
-            throw new BadCommandException("Can't find that item");
-        }
-
-        String item1 = rawItemOrPreposition;
 
         if (iterator.hasNext()) {
             //next item must be a preposition.
-            optionalPreposition = checkPreposition(rawItemOrPreposition);
+            optionalPreposition = checkPreposition(iterator.next());
             if (!optionalPreposition.isPresent()) {
                 throw new BadCommandException("Form VERB NOUN VERB or VERB NOUN NOUN is illegal");
             }
+            result.setPreposition(optionalPreposition.get());
+
+            if (!iterator.hasNext()) {
+                throw new BadCommandException("Preposition without object");
+            }
+
+            //final word must be the second object.
+            Item item = getItem(iterator.next());
+            result.setItem2(item);
         }
 
-
-
-//        result.put(CommandType.verb, verb);
+        //no more words allowed
+        if (iterator.hasNext()) {
+            throw new BadCommandException("Words exist beyond expected end of command");
+        }
 
         return result;
+    }
+
+    public Item getItem(String item) throws BadCommandException {
+        try {
+            System.out.println("getting item " + item);
+            return player.getItem(item);
+        } catch (IllegalArgumentException e) {
+            System.out.println("throwing error " + item);
+            throw new BadCommandException("Player cannot access any item by name " + item);
+        }
     }
 
     public Optional<Preposition> checkPreposition(String text) {
         return Arrays.stream(Preposition.values())
                 .filter(value -> text.equalsIgnoreCase(value.name()))
                 .findFirst();
+    }
+
+    public String[] stripUnnecessaryWords(String[] str) {
+        return Arrays.asList(str).stream()
+                .filter(word -> !Articles.has(word))
+                .filter(word -> !Adjectives.has(word))
+                .toArray(String[]::new);
     }
 
 }

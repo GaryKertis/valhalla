@@ -1,7 +1,7 @@
 package valhalla;
 
 public class Constants {
-    public static final Command look = new Command("look", true);
+    public static final Command look = new Command("look", false);
     public static final Command get = new Command("get", true);
     public static final Command take = new Command("take", true, get);
     public static final Command move = new Command("move", true);
@@ -31,5 +31,8 @@ public class Constants {
     public static final Command sw = new Command("sw", false, southwest);
     public static final Command ne = new Command("ne", false, northeast);
     public static final Command nw = new Command("nw", false, northwest);
+
+    public static final Item key = new Item("key");
+
 
 }
