@@ -2,6 +2,8 @@ package valhalla;
 
 import lombok.Data;
 
+import java.util.Arrays;
+
 import static valhalla.Constants.*;
 
 public enum CommandList {
@@ -11,6 +13,8 @@ public enum CommandList {
     USE(use),
     GIVE(give),
     PUT(put),
+    INVENTORY(inventory),
+    I(i),
     // valid movements
     EAST(east),
     WEST(west),
@@ -39,6 +43,13 @@ public enum CommandList {
 
     public Command getCommand() {
         return this.command;
+    }
+
+    public static CommandList findByValue(Command command) {
+        return Arrays.stream(CommandList.values())
+                .filter(value -> value.getCommand().equals(command))
+                .findFirst()
+                .orElse(LOOK);
     }
 
     private Command command;

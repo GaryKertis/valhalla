@@ -4,9 +4,11 @@ public class Constants {
     public static final Command look = new Command("look", false);
     public static final Command get = new Command("get", true);
     public static final Command use = new Command("use", true);
-    public static final Command take = new Command("take", true, get);
-    public static final Command give = new Command("give", true, use);
-    public static final Command put = new Command("put", true, use);
+    public static final Command inventory = new Command("inventory", false);
+    public static final Command take = new Command("take", get);
+    public static final Command give = new Command("give", use);
+    public static final Command put = new Command("put", use);
+    public static final Command i = new Command("i", inventory);
 
     // valid movements
     public static final Movement east = new Movement("east", false, Direction.e);

@@ -1,4 +1,4 @@
-package valhalla.rooms;
+package valhalla;
 
 import lombok.EqualsAndHashCode;
 import valhalla.Command;
@@ -10,10 +10,17 @@ import static valhalla.Constants.look;
 @EqualsAndHashCode
 public class ActionMap {
     private HashMap<Command, String> actionMap = new HashMap<>();
+    public static String DEFAULT_NO_TAKE = "You can't take the %s.";
+    public static String DEFAULT_TAKE = "You take the %s.";
+    public static String DEFAULT_LOOK = "You see nothing unusual about the %s.";
 
-    public ActionMap() {
-        actionMap.put(get, "You can't take that.");
-        actionMap.put(look, "You see nothing unusual.");
+    public ActionMap(String name) {
+        actionMap.put(get, decorate(DEFAULT_NO_TAKE, name));
+        actionMap.put(look, decorate(DEFAULT_LOOK, name));
+    }
+
+    public String decorate(String sentence, String name) {
+        return String.format(sentence, name);
     }
 
     public void addAction(Command command, String str) {

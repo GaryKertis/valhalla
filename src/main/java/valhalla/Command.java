@@ -16,9 +16,8 @@ public class Command {
         this.transitive = transitive;
     }
 
-    public Command(String name, boolean transitive, Command aliasFor) {
+    public Command(String name, Command aliasFor) {
         this.name = name;
-        this.transitive = transitive;
         this.aliasFor = aliasFor;
     }
     public Optional<Command> getOptionalAliasFor() {

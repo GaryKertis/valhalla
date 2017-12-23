@@ -18,7 +18,7 @@ public class LivingRoom extends Room {
         this.addItem(new Item("table", "You see an open bag of cheetos. There are some magazines that showcase your"
                 + " father's intellectual pretensions. The cover story of economist is on the unemployment epidemic."));
 
-        this.addItem(new Item("cheetos", "Yum. The puffy ones, not the crunchy ones."));
+        this.addItem(new Item("cheetos", "Yum. The puffy ones, not the crunchy ones.", true));
 
     }
 

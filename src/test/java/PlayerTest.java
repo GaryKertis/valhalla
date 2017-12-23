@@ -1,5 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import valhalla.*;
@@ -21,8 +22,8 @@ public class PlayerTest {
     public void setup() {
         room = mock(Room.class);
         player = new Player(room);
-        key = new Item("key");
-        door = new Item("door");
+        key = new Item("key", "An old key", true);
+        door = new Item("door", "A new door", true);
         when(room.getItem("key")).thenReturn(key);
         when(room.getItem("door")).thenThrow(IllegalArgumentException.class);
         when(room.getItems()).thenReturn(new ArrayList<Item>(Arrays.asList(key)));
@@ -36,16 +37,15 @@ public class PlayerTest {
     }
 
     @Test
-    public void takeItem() {
-        Item[] expected = { door };
-        player.takeItem(door);
+    public void takeItem() throws BadCommandException {
+        Item[] expected = {key};
+        player.takeItem(key);
         assertArrayEquals(expected, player.getInventory().toArray());
     }
 
-    @Test
-    public void canFindItem() {
+    @Test(expected = BadCommandException.class)
+    public void cannotTakeItem() throws BadCommandException {
         player.takeItem(door);
-        assert(player.canFindItem("door"));
     }
 
     @Test
@@ -59,26 +59,27 @@ public class PlayerTest {
     }
 
     @Test
-    public void canGetItemFromInventory() {
-        player.takeItem(door);
-        assertEquals(player.getItemFromInventory("door"), door);
-    }
-
-    @Test
-    public void canGetItem() {
-        player.takeItem(door);
-        assertEquals(door, player.getItem("door"));
-    }
-
-    @Test
-    public void canGetItemFromRoom() {
+    public void canGetItemFromRoom() throws BadCommandException {
         player.takeItem(key);
         assertEquals(player.getItem("key"), key);
     }
 
     @Test
+    public void inventory() throws BadCommandException {
+        player.takeItem(key);
+        String result = "You are carrying:" + '\n' + "key";
+        assertEquals(result, player.printInventory());
+    }
+
+    @Test(expected = BadCommandException.class)
+    public void takeSameItemTwice() throws BadCommandException {
+        player.takeItem(key);
+        player.takeItem(key);
+    }
+
+    @Test
     public void canFindItemInRoom() {
-        assert(player.canFindItem("key"));
+        assert (player.canFindItem("key"));
     }
 
     @Test

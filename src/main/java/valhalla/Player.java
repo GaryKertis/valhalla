@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Data
@@ -17,8 +18,20 @@ public class Player {
         currentRoom = room;
     }
 
-    public void takeItem(Item item) {
-        inventory.add(item);
+    public void takeItem(Item item) throws BadCommandException {
+
+        if (hasItem(item.getName())) {
+            throw new BadCommandException(String.format("You already have the %s.", item.getName()));
+        }
+
+        if (!currentRoom.hasItem(item.getName())) {
+            throw new BadCommandException("That isn't in this room.");
+        }
+
+        if (item.isGettable()) {
+            inventory.add(item);
+            currentRoom.removeItem(item);
+        }
     }
 
     public boolean hasItem(String itemName) {
@@ -27,6 +40,20 @@ public class Player {
 
     public boolean canFindItem(String item) {
         return hasItem(item) || currentRoom.hasItem(item);
+    }
+
+    public String printInventory() {
+        String result = "You are carrying:" + '\n';
+        if (inventory.size() < 1) {
+            result += "Nothing.";
+            return result;
+        }
+        Iterator<Item> iterator = inventory.iterator();
+        while (iterator.hasNext()) {
+            result += iterator.next().getName();
+            if (iterator.hasNext()) result += '\n';
+        }
+        return result;
     }
 
     /**
@@ -50,11 +77,22 @@ public class Player {
                 .orElseThrow(() -> new IllegalArgumentException());
     }
 
-    public String doAction(Construction construction) {
+    public String doAction(Construction construction) throws BadCommandException {
         if (construction.getCommand() instanceof Movement) {
             return move((Movement) construction.getCommand());
         }
-        return construction.run();
+        switch (CommandList.findByValue(construction.getCommand())) {
+            case INVENTORY:
+                return printInventory();
+            case GET:
+                if (construction.getPreposition() != null) {
+                    throw new IllegalArgumentException();
+                }
+                takeItem(construction.getItem1());
+                construction.run();
+            default:
+            return construction.run();
+        }
     }
 
     public String move(Movement move) {
